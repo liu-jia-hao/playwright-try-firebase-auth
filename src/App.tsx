@@ -9,7 +9,16 @@ import {
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
 
-const app = initializeApp(JSON.parse(process.env.REACT_APP_FIREBASE_CONFIG!));
+// const app = initializeApp(JSON.parse(process.env.REACT_APP_FIREBASE_CONFIG!));
+
+const { apiKey, authDomain, projectId } = JSON.parse(
+  process.env.REACT_APP_FIREBASE_CONFIG!
+);
+const app = initializeApp({
+  apiKey,
+  authDomain,
+  projectId,
+});
 
 const App: React.FunctionComponent = () => {
   const [isErrored, setIsErrored] = useState(false);
@@ -98,7 +107,7 @@ const App: React.FunctionComponent = () => {
           <div>Welcome!</div>
         </div>
       )}
-      <div id="auth-container" ref={authContainerRef}/>
+      <div id="auth-container" ref={authContainerRef} />
     </div>
   );
 };
