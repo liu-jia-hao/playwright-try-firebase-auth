@@ -40,7 +40,7 @@ export class Authentication {
     private readonly options: FirebaseOptions,
     private readonly serviceAccount: ServiceAccount,
     private version: string
-  ) {}
+  ) { }
 
   async login(page: Page, tenantId?: string) {
     if (this.userSet) {
@@ -74,9 +74,7 @@ export class Authentication {
           ? apps[0]
           : window.firebase.initializeApp(config)
         const auth = window.Auth.getAuth(app)
-        if ((window as any).tenantId) {
-          auth.tenantId = (window as any).tenantId
-        }
+        auth.tenantId = 'taiji-11166'
         await window.Auth.signInWithCustomToken(auth, token)
       },
       { token, config: this.options }
