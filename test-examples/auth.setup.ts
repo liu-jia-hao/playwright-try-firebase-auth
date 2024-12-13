@@ -1,4 +1,4 @@
-import playwrightFirebasePlugin from '../../index'
+import playwrightFirebasePlugin from '@nearform/playwright-firebase'
 import { test as base } from '@playwright/test'
 import dotenv from 'dotenv'
 dotenv.config({ path: './.env' })
