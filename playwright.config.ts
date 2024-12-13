@@ -1,5 +1,5 @@
 import { defineConfig, devices } from '@playwright/test'
-import { Credentials } from '@nearform/playwright-firebase'
+import type { Credentials } from './src/plugin'
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
