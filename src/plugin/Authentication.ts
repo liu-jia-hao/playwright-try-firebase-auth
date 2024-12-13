@@ -67,25 +67,21 @@ export class Authentication {
       throw new Error(errors.FIREBASE_MODULE_LOAD_ERROR)
     }
 
-    try {
-      await page.evaluate(
-        async ({ token, config }) => {
-          const apps = window.firebase.getApps()
-          const app = apps.length
-            ? apps[0]
-            : window.firebase.initializeApp(config)
-          const auth = window.Auth.getAuth(app)
-          if (tenantId) {
-            auth.tenantId = tenantId
-          }
-          await window.Auth.signInWithCustomToken(auth, token)
-        },
-        { token, config: this.options }
-      )
-      this.userSet = true
-    } catch {
-      throw new Error(errors.FIREBASE_INIT_ERROR)
-    }
+    await page.evaluate(
+      async ({ token, config }) => {
+        const apps = window.firebase.getApps()
+        const app = apps.length
+          ? apps[0]
+          : window.firebase.initializeApp(config)
+        const auth = window.Auth.getAuth(app)
+        if ((window as any).tenantId) {
+          auth.tenantId = (window as any).tenantId
+        }
+        await window.Auth.signInWithCustomToken(auth, token)
+      },
+      { token, config: this.options }
+    )
+    this.userSet = true
   }
 
   async logout(page: Page) {
