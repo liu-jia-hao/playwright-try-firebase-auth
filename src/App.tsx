@@ -36,7 +36,9 @@ const App: React.FunctionComponent = () => {
 
   useEffect(() => {
     const auth = getAuth(app);
-    auth.tenantId = 'taiji-11166'; // Set tenantId
+    if(process.env.REACT_APP_TENANT_ID) {
+      auth.tenantId = process.env.REACT_APP_TENANT_ID; // Set tenantId
+    }
     const setupAuthUI = async () => {
       try {
         onAuthStateChanged(auth, async (currentUser) => {
