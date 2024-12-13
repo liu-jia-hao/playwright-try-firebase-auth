@@ -8,7 +8,11 @@ test('has title', async ({ page, auth }) => {
   
   await expect(page.getByText('You are logged out')).toBeVisible()
 
+  // await page.pause();
+
   await auth.login(page)
+
+  // await page.pause();
 
   await expect(page.getByText('Log out')).toBeVisible() //this must be awaited as it takes some time to authorise and re-render.
 
