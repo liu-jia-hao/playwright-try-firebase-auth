@@ -42,7 +42,7 @@ export class Authentication {
     private version: string
   ) {}
 
-  async login(page: Page) {
+  async login(page: Page, tenantId?: string) {
     if (this.userSet) {
       console.info('User already authenticated')
       return
@@ -75,6 +75,9 @@ export class Authentication {
             ? apps[0]
             : window.firebase.initializeApp(config)
           const auth = window.Auth.getAuth(app)
+          if (tenantId) {
+            auth.tenantId = tenantId
+          }
           await window.Auth.signInWithCustomToken(auth, token)
         },
         { token, config: this.options }
