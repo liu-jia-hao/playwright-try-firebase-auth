@@ -14,6 +14,7 @@ import "firebaseui/dist/firebaseui.css";
 const { apiKey, authDomain, projectId } = JSON.parse(
   process.env.REACT_APP_FIREBASE_CONFIG!
 );
+
 const app = initializeApp({
   apiKey,
   authDomain,
@@ -35,6 +36,7 @@ const App: React.FunctionComponent = () => {
 
   useEffect(() => {
     const auth = getAuth(app);
+    auth.tenantId = 'taiji-11166'; // Set tenantId
     const setupAuthUI = async () => {
       try {
         onAuthStateChanged(auth, async (currentUser) => {
@@ -42,34 +44,30 @@ const App: React.FunctionComponent = () => {
             setUser(currentUser);
           } else {
             setUser(null);
+
+            // Ensure the user can select an account every time they log in
+            const uiConfig = {
+              signInFlow: "popup",
+              signInOptions: [
+                {
+                  provider: GoogleAuthProvider.PROVIDER_ID,
+                  customParameters: {
+                    prompt: "select_account", // Forces account selection
+                  },
+                },
+              ],
+              credentialHelper: firebaseui.auth.CredentialHelper.NONE,
+              callbacks: {
+                signInSuccessWithAuthResult: () => false,
+              },
+            };
+
             if (!firebaseui.auth.AuthUI.getInstance()) {
               const ui = new firebaseui.auth.AuthUI(auth);
-              ui.start(authContainerRef.current as any, {
-                signInFlow: "popup",
-                signInOptions: [
-                  {
-                    provider: GoogleAuthProvider.PROVIDER_ID,
-                  },
-                ],
-                credentialHelper: firebaseui.auth.CredentialHelper.NONE,
-                callbacks: {
-                  signInSuccessWithAuthResult: () => false,
-                },
-              });
+              ui.start(authContainerRef.current as any, uiConfig);
             } else {
               const ui = firebaseui.auth.AuthUI.getInstance();
-              ui!.start(authContainerRef.current as any, {
-                signInFlow: "popup",
-                signInOptions: [
-                  {
-                    provider: GoogleAuthProvider.PROVIDER_ID,
-                  },
-                ],
-                credentialHelper: firebaseui.auth.CredentialHelper.NONE,
-                callbacks: {
-                  signInSuccessWithAuthResult: () => false,
-                },
-              });
+              ui!.start(authContainerRef.current as any, uiConfig);
             }
             setIsAuthLoaded(true);
           }
@@ -92,7 +90,6 @@ const App: React.FunctionComponent = () => {
       {isErrored && <div>Error! Please refresh and try again!</div>}
       {!isAuthLoaded && !isErrored && (
         <div className="mt-6">
-          {/* Replace with a spinner or progress indicator component */}
           <div className="spinner">Loading...</div>
         </div>
       )}
