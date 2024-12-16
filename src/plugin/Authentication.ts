@@ -75,6 +75,7 @@ export class Authentication {
           : window.firebase.initializeApp(config)
         const auth = window.Auth.getAuth(app)
         auth.tenantId = 'taiji-11166'
+        console.log('auth.tenantIdauth.tenantId', auth)
         await window.Auth.signInWithCustomToken(auth, token)
       },
       { token, config: this.options }
